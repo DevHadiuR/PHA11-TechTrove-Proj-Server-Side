@@ -36,6 +36,9 @@ async function run() {
     await client.connect();
     // all blogs collection
     const allBlogsCollection = client.db("BlogsDB").collection("allBlogs");
+    const allCommentsCollection = client
+      .db("BlogsDB")
+      .collection("allComments");
 
     app.get("/allBlogs", async (req, res) => {
       const result = await allBlogsCollection.find().toArray();
@@ -46,6 +49,18 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await allBlogsCollection.findOne(query);
+      res.send(result);
+    });
+
+    // all comment
+    app.post("/allComments", async (req, res) => {
+      const comment = req.body;
+      const result = await allCommentsCollection.insertOne(comment);
+      res.send(result);
+    });
+
+    app.get("/allComments", async (req, res) => {
+      const result = await allCommentsCollection.find().toArray();
       res.send(result);
     });
 
