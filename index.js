@@ -34,6 +34,7 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+
     // all blogs collection
     const allBlogsCollection = client.db("BlogsDB").collection("allBlogs");
     const allCommentsCollection = client
@@ -55,6 +56,24 @@ async function run() {
     app.post("/allBlogs", async (req, res) => {
       const blogs = req.body;
       const result = await allBlogsCollection.insertOne(blogs);
+      res.send(result);
+    });
+
+    app.put("/allBlogs/:id", async (req, res) => {
+      const id = req.params.id;
+      const body = req.body;
+      const query = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedBlog = {
+        $set: {
+          ...body,
+        },
+      };
+      const result = await allBlogsCollection.updateOne(
+        query,
+        updatedBlog,
+        options
+      );
       res.send(result);
     });
 
