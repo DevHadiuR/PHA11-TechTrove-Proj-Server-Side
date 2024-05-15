@@ -52,6 +52,12 @@ async function run() {
       res.send(result);
     });
 
+    app.post("/allBlogs", async (req, res) => {
+      const blogs = req.body;
+      const result = await allBlogsCollection.insertOne(blogs);
+      res.send(result);
+    });
+
     // all comment
     app.post("/allComments", async (req, res) => {
       const comment = req.body;
