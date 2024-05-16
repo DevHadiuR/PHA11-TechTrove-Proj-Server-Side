@@ -42,7 +42,19 @@ async function run() {
       .collection("allComments");
 
     app.get("/allBlogs", async (req, res) => {
-      const result = await allBlogsCollection.find().toArray();
+      const filter = req.query.category;
+      const search = req.query.search;
+
+      let query = {
+        title: {
+          $regex: search,
+          $options: "i",
+        },
+      };
+
+      if (filter) query.category = filter;
+
+      const result = await allBlogsCollection.find(query).toArray();
       res.send(result);
     });
 
