@@ -40,6 +40,9 @@ async function run() {
     const allCommentsCollection = client
       .db("BlogsDB")
       .collection("allComments");
+    const allWishlistCollection = client
+      .db("BlogsDB")
+      .collection("allWishlist");
 
     app.get("/allBlogs", async (req, res) => {
       const filter = req.query.category;
@@ -63,6 +66,7 @@ async function run() {
         .find()
         .sort({ longDescription: -1 })
         .limit(10)
+        .project({ title: 1, bloggerEmail: 1, bloggerProfile: 1 })
         .toArray();
       res.send(topBlogs);
     });
