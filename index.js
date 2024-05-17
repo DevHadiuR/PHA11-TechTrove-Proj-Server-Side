@@ -130,6 +130,13 @@ async function run() {
       res.send(result);
     });
 
+    // all wishlist
+    app.post("/allWishlist", async (req, res) => {
+      const body = req.body;
+      const result = await allWishlistCollection.insertOne(body);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
