@@ -151,17 +151,15 @@ async function run() {
         const result = await allWishlistCollection.find(query).toArray();
         res.send(result);
       }
+    });
 
-      // const id = req.query.wishlistBlogId;
-      // console.log(id);
-
-      // const filter = req.query.wishlistAddedUserEmail;
-      // const query = {};
-      // if (filter) query.wishlistAddedUserEmail = filter;
-
-      // const result = await allWishlistCollection.find(query).toArray();
-
-      // res.send(result);
+    app.delete("/allWishlist", async (req, res) => {
+      const { removingId } = req.query;
+      if (removingId) {
+        const query = { _id: new ObjectId(removingId) };
+        const result = await allWishlistCollection.deleteOne(query);
+        res.send(result);
+      }
     });
 
     // Send a ping to confirm a successful connection
