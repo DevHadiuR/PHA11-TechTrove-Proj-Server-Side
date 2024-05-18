@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const port = process.env.PORT || 5000;
@@ -34,8 +35,6 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-
-    // all blogs collection
     const allBlogsCollection = client.db("BlogsDB").collection("allBlogs");
     const allCommentsCollection = client
       .db("BlogsDB")
@@ -43,6 +42,23 @@ async function run() {
     const allWishlistCollection = client
       .db("BlogsDB")
       .collection("allWishlist");
+
+    // jwt
+    app.post("/jwt", async (req, res) => {
+      const user = req.body;
+      console.log("token user :", user.email);
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN, {
+        expiresIn: "30d",
+      });
+
+      res
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production" ? true : false,
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        })
+        .send({ token });
+    });
 
     app.get("/allBlogs", async (req, res) => {
       const filter = req.query.category;
