@@ -137,6 +137,33 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/allWishlist", async (req, res) => {
+      const { wishlistAddedUserEmail, wishlistBlogId } = req.query;
+      if (wishlistBlogId) {
+        const result = await allWishlistCollection.findOne({
+          _id: new ObjectId(wishlistBlogId),
+        });
+        if (result) {
+          res.send(result);
+        }
+      } else if (wishlistAddedUserEmail) {
+        const query = { wishlistAddedUserEmail };
+        const result = await allWishlistCollection.find(query).toArray();
+        res.send(result);
+      }
+
+      // const id = req.query.wishlistBlogId;
+      // console.log(id);
+
+      // const filter = req.query.wishlistAddedUserEmail;
+      // const query = {};
+      // if (filter) query.wishlistAddedUserEmail = filter;
+
+      // const result = await allWishlistCollection.find(query).toArray();
+
+      // res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
