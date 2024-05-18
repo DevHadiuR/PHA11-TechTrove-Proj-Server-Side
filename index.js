@@ -60,6 +60,17 @@ async function run() {
         .send({ token });
     });
 
+    app.get("/logout", (req, res) => {
+      res
+        .clearCookie("token", {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production" ? true : false,
+          maxAge: 0,
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+        })
+        .send({ clear: "token" });
+    });
+
     app.get("/allBlogs", async (req, res) => {
       const filter = req.query.category;
       const search = req.query.search;
